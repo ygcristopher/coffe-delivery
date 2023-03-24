@@ -10,8 +10,8 @@ export const GlobalStyle = createGlobalStyle`
  }
 
  body {
-   background: ${(props) => props.theme.background};
-   color: ${(props) => props.theme['base-text']};
+   background: ${({ theme }) => theme.colors['base-background']};
+   color: ${({ theme }) => theme.colors['base-text']};
    -webkit-font-smoothing: antialiased;
  }
 
@@ -27,5 +27,15 @@ export const GlobalStyle = createGlobalStyle`
 
 a {
    text-decoration: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
 }
 `
