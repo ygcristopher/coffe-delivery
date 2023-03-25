@@ -7,6 +7,10 @@ export const HeaderContainer = styled.header`
   display: flex;
   align-items: center;
   justify-content: center;
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 5;
   /* border: 1px solid red; */
 
   > div {
@@ -14,7 +18,6 @@ export const HeaderContainer = styled.header`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* border: 1px solid red; */
   }
 
   /* display: flex;
