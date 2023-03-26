@@ -1,6 +1,4 @@
 import { ThemeProvider } from 'styled-components'
-// import { Header } from './components/Header'
-// import { About } from './components/About'
 import { defaultTheme } from './styles/themes/default'
 import { GlobalStyle } from './styles/global'
 import { BrowserRouter } from 'react-router-dom'
@@ -10,7 +8,6 @@ export function App() {
   return (
     <>
       <ThemeProvider theme={defaultTheme}>
-        {/* <About /> */}
         <BrowserRouter>
           <Router />
         </BrowserRouter>
