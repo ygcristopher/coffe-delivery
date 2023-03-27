@@ -2,11 +2,11 @@ import { HeaderButton, HeaderButtonsContainer, HeaderContainer } from './styles'
 import coffeLogo from '../../assets/coffe-Logo.svg'
 import { MapPin, ShoppingCart } from 'phosphor-react'
 import { NavLink } from 'react-router-dom'
-
-// import { RiMapPinFill } from 'react-icons/ri'
-// import { BsCartFill } from 'react-icons/bs'
+import { useCart } from '../../hooks/useCart'
 
 export function Header() {
+  const { cartQuantity } = useCart()
+
   return (
     <HeaderContainer>
       <div className="container">
@@ -21,17 +21,12 @@ export function Header() {
           </HeaderButton>
           <NavLink to="/completeOrder">
             <HeaderButton variant="yellow">
+              {cartQuantity >= 1 && <span>{cartQuantity}</span>}
               <ShoppingCart size={20} weight="fill" />
             </HeaderButton>
           </NavLink>
         </HeaderButtonsContainer>
       </div>
-      {/* <a>
-        <RiMapPinFill className="iconMap" /> Juiz de Fora, MG
-      </a>
-      <button>
-        <BsCartFill className="iconCar" />
-      </button> */}
     </HeaderContainer>
   )
 }

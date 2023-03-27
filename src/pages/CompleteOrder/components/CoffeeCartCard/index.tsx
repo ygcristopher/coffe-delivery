@@ -6,20 +6,46 @@ import {
   RemoveButton,
 } from './styles'
 import { Trash } from 'phosphor-react'
+import { CartItem } from '../../../../contexts/CartContext'
+import { formatMoney } from '../../../../utils/formatMoney'
+import { useCart } from '../../../../hooks/useCart'
 
-export function CoffeeCartCard() {
+interface CoffeCartCardProps {
+  coffee: CartItem
+}
+
+export function CoffeeCartCard({ coffee }: CoffeCartCardProps) {
+  const { changeCartItemQuantity, removeCartItem } = useCart()
+
+  function handleIncrease() {
+    changeCartItemQuantity(coffee.id, 'increase')
+  }
+
+  function handleDecrease() {
+    changeCartItemQuantity(coffee.id, 'decrease')
+  }
+
+  function handleRemove() {
+    removeCartItem(coffee.id)
+  }
+
+  const coffeeTotal = coffee.price * coffee.quantity
+
+  const formattedPrice = formatMoney(coffeeTotal)
   return (
     <CoffeeCartCardContainer>
       <div>
-        <img
-          src="https://s3-alpha-sig.figma.com/img/55b1/f9ee/64600f98b2bae456b96fdc624c4b4f47?Expires=1680480000&Signature=K~xATDgojKwciiaN5oanFmRH2F2L5Hzi9l3TGelmYLpzbTJOdHVp5oJ9xwRY2W2xyJ-NJLYzvcLX1mNcbz4nkEwNcEbHQ-pM2w4fl3pANuE1zuS66BFZPJPFV-9jdAP9EcqGE8vuSb18TMAYd~YrBbwkGxNmCbn8P-AZ9N-tov74tVz2OTZx2uLFMiuaCsG7tJexCb7nMFGoPJLhGMIFJqgTfjyZUk0jcbIpNj9j3EPnWUw2VoQJD6GpDHIUzIgqlcgAbEofIf52SdtCTlyh076EhmPAXvwopeJzyQlmB-i8yuooRBkxg4dWg5Eh3AUz9fAMhx2dwK0DOEyys75kZA__&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4"
-          alt=""
-        />
+        <img src={`/coffees/${coffee.photo}`} />
         <div>
-          <RegularText color="subtitle">Expresso Tradicional</RegularText>
+          <RegularText color="subtitle">{coffee.name}</RegularText>
           <ActionsContainer>
-            <QuantityInput size="small" />
-            <RemoveButton>
+            <QuantityInput
+              size="small"
+              onIncrease={handleIncrease}
+              onDecrease={handleDecrease}
+              quantity={coffee.quantity}
+            />
+            <RemoveButton onClick={handleRemove}>
               <Trash size={16} />
               REMOVER
             </RemoveButton>
@@ -27,7 +53,7 @@ export function CoffeeCartCard() {
         </div>
       </div>
 
-      <p>R$ 9,90</p>
+      <p>R$ {formattedPrice}</p>
     </CoffeeCartCardContainer>
   )
 }
