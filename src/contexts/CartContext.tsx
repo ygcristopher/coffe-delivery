@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useState } from 'react'
+import { createContext, ReactNode, useEffect, useState } from 'react'
 import { Coffee } from '../pages/Home/components/CoffeeCard'
 import { produce } from 'immer'
 
@@ -9,6 +9,8 @@ export interface CartItem extends Coffee {
 interface CartContextType {
   cartItems: CartItem[]
   cartQuantity: number
+  cartItemsTotal: number
+  cleanCart: () => void
   addCoffeeToCart: (coffee: CartItem) => void
   changeCartItemQuantity: (
     cartItemId: number,
@@ -21,12 +23,24 @@ interface CartContextProviderProps {
   children: ReactNode
 }
 
+const COFFEE_ITENS_STORAGE_KEY = 'coffeeDelivery:cartItems'
+
 export const CartContext = createContext({} as CartContextType)
 
 export function CartContextProvider({ children }: CartContextProviderProps) {
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    const storedCartItems = localStorage.getItem(COFFEE_ITENS_STORAGE_KEY)
+    if (storedCartItems) {
+      return JSON.parse(storedCartItems)
+    }
+    return []
+  })
 
   const cartQuantity = cartItems.length
+
+  const cartItemsTotal = cartItems.reduce((total, cartItem) => {
+    return total + cartItem.price * cartItem.quantity
+  }, 0)
 
   function addCoffeeToCart(coffee: CartItem) {
     const coffeAlreadyExistsInCart = cartItems.findIndex(
@@ -42,6 +56,10 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     })
 
     setCartItems(newCart)
+  }
+
+  function cleanCart() {
+    setCartItems([])
   }
 
   function removeCartItem(cartItemId: number) {
@@ -77,6 +95,10 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
     setCartItems(newCart)
   }
 
+  useEffect(() => {
+    localStorage.setItem(COFFEE_ITENS_STORAGE_KEY, JSON.stringify(cartItems))
+  }, [cartItems])
+
   return (
     <CartContext.Provider
       value={{
@@ -85,6 +107,8 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
         addCoffeeToCart,
         changeCartItemQuantity,
         removeCartItem,
+        cartItemsTotal,
+        cleanCart,
       }}
     >
       {children}

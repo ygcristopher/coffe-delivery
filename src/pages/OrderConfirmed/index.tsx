@@ -4,9 +4,29 @@ import confirmedOrderDelivery from '../../assets/confirmed-delivery.svg'
 import { InfoWithIcon } from '../../components/InfoWithIcon'
 import { MapPin, Clock, CurrencyDollar } from 'phosphor-react'
 import { useTheme } from 'styled-components'
+import { useLocation, useNavigate } from 'react-router-dom'
+import { OrderData } from '../CompleteOrder'
+import { paymentMethods } from '../CompleteOrder/components/CompleteOrderForm/PaymentMethodOptions'
+import { useEffect } from 'react'
+
+interface LocationType {
+  state: OrderData
+}
 
 export function OrderConfirmedPage() {
-  const { colors } = useTheme() 
+  const { colors } = useTheme()
+
+  const { state } = useLocation() as unknown as LocationType
+
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!state) {
+      navigate('/')
+    }
+  }, [])
+
+  if (!state) return <></>
 
   return (
     <OrderConfirmedContainer className="container">
@@ -24,13 +44,16 @@ export function OrderConfirmedPage() {
             iconBg={colors['brand-purple']}
             text={
               <RegularText>
-                Entrega em <strong>Rua 4A, 10</strong>
+                Entrega em
+                <strong>
+                  {state.street}, {state.number}
+                </strong>
                 <br />
-                Benfica - Juiz de Fora, MG
+                {state.district} - {state.city}, {state.uf}
               </RegularText>
             }
           />
-           <InfoWithIcon
+          <InfoWithIcon
             icon={<Clock weight="fill" />}
             iconBg={colors['brand-yellow']}
             text={
@@ -41,14 +64,14 @@ export function OrderConfirmedPage() {
               </RegularText>
             }
           />
-           <InfoWithIcon
+          <InfoWithIcon
             icon={<CurrencyDollar weight="fill" />}
             iconBg={colors['brand-yellow']}
             text={
               <RegularText>
                 Pagamento na entrega
                 <br />
-                <strong>Cartão de crédito</strong>
+                <strong>{paymentMethods[state.paymentMethod].label}</strong>
               </RegularText>
             }
           />
