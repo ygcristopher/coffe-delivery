@@ -22,7 +22,7 @@ export function Header() {
           <NavLink to="/completeOrder">
             <HeaderButton variant="yellow">
               {cartQuantity >= 1 && <span>{cartQuantity}</span>}
-              <ShoppingCart size={20} weight="fill" />
+              <ShoppingCart size={20} weight="fill" className='cart' />
             </HeaderButton>
           </NavLink>
         </HeaderButtonsContainer>
